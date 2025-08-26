@@ -60,7 +60,7 @@ async function loadPokemon() {
         // TODO 1.3: Crear un bucle for que vaya del 1 al 5
         // Dentro del bucle, añade al array las promesas de fetchPokemonData(i)
         // PISTA: usa nombreArray.push(fetchPokemonData(i))
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 900; i++) {
             pokemonPromises.push(fetchPokemonData(i));
         }
         
@@ -119,9 +119,8 @@ async function loadPokemon() {
 async function fetchPokemonData(pokemonId) {
     try {
         // TODO 2.1: Hacer una petición fetch a la API
-        // PISTA: const response = await fetch(POKEAPI_BASE_URL + pokemonId);
+        const response = await fetch(POKEAPI_BASE_URL + pokemonId);
         // ¿Por qué usamos await? ¡Porque fetch() devuelve una promesa!
-        
         /* ESCRIBE TU CÓDIGO AQUÍ */
         
         
@@ -132,6 +131,7 @@ async function fetchPokemonData(pokemonId) {
         
         
         // TODO 2.3: Convertir la respuesta a JSON
+        const pokemonData= await response.json();
         // PISTA: const pokemonData = await response.json();
         // ¿Por qué usamos await? ¡Porque .json() también devuelve una promesa!
         
@@ -144,15 +144,22 @@ async function fetchPokemonData(pokemonId) {
         // Para sprite: pokemonData.sprites.other['official-artwork'].front_default || pokemonData.sprites.front_default
         
         /* ESCRIBE TU CÓDIGO AQUÍ */
+        console.log('datos del porkemon:',{
+             id:pokemonData.id ,
+             name:pokemonData.name,
+             height:pokemonData.height ,
+             weight:pokemonData.weight,
+             types: pokemonData.types.map(type=>type.type.name),
+             sprite:pokemonData.sprites.other["official-artwork"].front_default || pokemonData.sprites.front_default
+        });
         return {
-            // id: ?,
-            // name: ?,
-            // height: ?,
-            // weight: ?,
-            // types: ?,
-            // sprite: ?
-        };
-        
+            id:pokemonData.id ,
+            name:pokemonData.name,
+            height:pokemonData.height ,
+            weight:pokemonData.weight,
+            types: pokemonData.types.map(type=>type.type.name),
+            sprite:pokemonData.sprites.other["official-artwork"].front_default || pokemonData.sprites.front_default
+        }
     } catch (error) {
         // TODO 2.5: Manejar errores
         // PISTA: Muestra el error en consola y relanza el error con throw
@@ -173,7 +180,7 @@ async function fetchPokemonData(pokemonId) {
 
 function renderPokemonCards(pokemonList) {
     // TODO 3.1: Limpiar el contenedor
-    // PISTA: pokemonContainer.innerHTML = '';
+     pokemonContainer.innerHTML = '';
     
     /* ESCRIBE TU CÓDIGO AQUÍ */
     
@@ -181,20 +188,13 @@ function renderPokemonCards(pokemonList) {
     // TODO 3.2: Crear una tarjeta para cada Pokemon
     // PISTA: Usa forEach() para recorrer pokemonList
     // Dentro del forEach, usa createPokemonCard() y appendChild()
-    
-    /* ESCRIBE TU CÓDIGO AQUÍ */
-    
-    
+    pokemonList.forEach(pokemon=>{
+        const card =createPokemonCard(pokemon);
+        pokemonContainer.appendChild(card);
+    });
+   
 }
 
-/* ==============================================
-   🎨 FUNCIONES YA COMPLETADAS
-   ==============================================
-   
-   Estas funciones ya están terminadas para que puedas
-   enfocarte en los ejercicios principales.
-   
-============================================== */
 
 // ✅ Función para crear una tarjeta individual de Pokemon (YA COMPLETADA)
 function createPokemonCard(pokemon) {
